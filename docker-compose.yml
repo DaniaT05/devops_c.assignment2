@@ -1,0 +1,34 @@
+name: a2-part1
+services:
+  web:
+    image: daniat05/assignment2-app:1.0
+    build: .
+    container_name: a2-web
+    ports:
+      - "8300:80"
+    environment:
+      DB_HOST: db
+      DB_NAME: assignment2
+      DB_USER: appuser
+      DB_PASS: AppPass#2026x
+      PART_LABEL: "Part-I"
+    depends_on:
+      - db
+    restart: unless-stopped
+  db:
+    image: mariadb:10.11
+    container_name: a2-db
+    command: --performance-schema=0 --innodb-buffer-pool-size=64M
+    ports:
+      - "3307:3306"
+    environment:
+      MARIADB_ROOT_PASSWORD: RootPass#2026x
+      MARIADB_DATABASE: assignment2
+      MARIADB_USER: appuser
+      MARIADB_PASSWORD: AppPass#2026x
+    volumes:
+      - a2-dbdata:/var/lib/mysql
+      - ./db-init:/docker-entrypoint-initdb.d
+    restart: unless-stopped
+volumes:
+  a2-dbdata:

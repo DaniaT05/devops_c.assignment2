@@ -1,0 +1,33 @@
+name: a2-part2
+services:
+  web:
+    image: daniat05/assignment2-app:1.0
+    container_name: p2-web
+    ports:
+      - "8400:80"
+    volumes:
+      - ./app:/var/www/html
+    environment:
+      DB_HOST: db
+      DB_NAME: assignment2
+      DB_USER: appuser
+      DB_PASS: AppPass#2026x
+      PART_LABEL: "Part-II (Jenkins)"
+    depends_on:
+      - db
+  db:
+    image: mariadb:10.11
+    container_name: p2-db
+    command: --performance-schema=0 --innodb-buffer-pool-size=64M
+    ports:
+      - "3308:3306"
+    environment:
+      MARIADB_ROOT_PASSWORD: RootPass#2026x
+      MARIADB_DATABASE: assignment2
+      MARIADB_USER: appuser
+      MARIADB_PASSWORD: AppPass#2026x
+    volumes:
+      - p2-dbdata:/var/lib/mysql
+      - ./db-init:/docker-entrypoint-initdb.d
+volumes:
+  p2-dbdata:

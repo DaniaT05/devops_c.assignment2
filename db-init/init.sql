@@ -1,0 +1,10 @@
+USE assignment2;
+CREATE TABLE IF NOT EXISTS notes (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  note VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+INSERT INTO notes(note) VALUES ('Hello from FA23-BDS-007'), ('Second sample note');
+CREATE USER IF NOT EXISTS 'readonly'@'%' IDENTIFIED BY 'ReadOnly#2026x';
+GRANT SELECT ON assignment2.* TO 'readonly'@'%';
+FLUSH PRIVILEGES;
