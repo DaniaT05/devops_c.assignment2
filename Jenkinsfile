@@ -10,11 +10,14 @@ pipeline {
   }
   post {
     always {
-      emailext(
-        subject: "Build ${currentBuild.currentResult}: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-        body: "Result: ${currentBuild.currentResult}\nJob: ${env.JOB_NAME}\nBuild number: ${env.BUILD_NUMBER}\nDetails: ${env.BUILD_URL}",
-        recipientProviders: [developers(), requestor()]
-      )
+      script {
+        def authorEmail = sh(script: 'git log -1 --format=%ae', returnStdout: true).trim()
+        emailext(
+          to: authorEmail,
+          subject: "Build ${currentBuild.currentResult}: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+          body: "Result: ${currentBuild.currentResult}\nJob: ${env.JOB_NAME}\nBuild number: ${env.BUILD_NUMBER}\nCommit author: ${authorEmail}\nDetails: ${env.BUILD_URL}"
+        )
+      }
     }
   }
 }
